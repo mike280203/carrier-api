@@ -35,9 +35,9 @@ services:
     # ggf. "-c max_connections=10" statt 100
     command: ["-c", "ssl=on"]
     volumes:
-      - pg_data:/var/lib/postgresql/18/data
-      - pg_tablespace:/tablespace
-      - pg_init:/init:ro
+      - carrier_pg_data:/var/lib/postgresql/18/data
+      - carrier_pg_tablespace:/tablespace
+      - carrier_pg_init:/init:ro
       # UNIX-Socket .s.PGSQL.5432.lock
       #- pg_run:/tmp
     # https://docs.docker.com/compose/how-tos/environment-variables/set-environment-variables
@@ -83,14 +83,14 @@ secrets:
     file: ./password.txt
 
 volumes:
-  pg_data:
-    name: pg_data
+  carrier_pg_data:
+    name: carrier_pg_data
     external: true
-  pg_tablespace:
-    name: pg_tablespace
+  carrier_pg_tablespace:
+    name: carrier_pg_tablespace
     external: true
-  pg_init:
-    name: pg_init
+  carrier_pg_init:
+    name: carrier_pg_init
     external: true
 
 networks:
