@@ -3,7 +3,7 @@
 from sqlalchemy import ForeignKey, Identity
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from carrier.entity.base import Base
+from carrier.Entity.base import Base
 
 
 class Aircraft(Base):

@@ -27,8 +27,8 @@
 
 [db]
 # dialect = "postgresql"
-# username = "patient"
-# name = "patient"
+# username = "carrier"
+# name = "carrier"
 password = "p"
 password-admin = "p"
 host = "localhost"
@@ -52,15 +52,15 @@ host = "localhost"
 port = 8843
 # realm = "python"
 # client-id = "python-client"
-client-secret = "8rbDQJ4xtAtPLlni26fu7kyJGOjpOPEl"
+client-secret = "lqOvrgoW1KvUIwicyP3XAyrPQAnRs7Ga"
 # admin = "admin"
 admin-password = "p"
-csv = "extras/compose/postgres/init/patient/csv/patient.csv"
+csv = "extras/compose/postgres/init/carrier/csv/carrier.csv"
 
 [graphql]
 # locust: auskommentieren
 graphiql-enabled = true
 
 [dev]
-db-populate = true
-keycloak-populate = true
+db-populate = false
+keycloak-populate = false

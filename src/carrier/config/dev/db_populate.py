@@ -25,7 +25,7 @@ from typing import Final
 from loguru import logger
 from sqlalchemy import Connection, create_engine, text
 
-from patient.config.config import resources_path
+from carrier.config.config import resources_path
 from patient.config.db import (
     db_connect_args,
     db_dialect,

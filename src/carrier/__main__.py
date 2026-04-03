@@ -1,4 +1,4 @@
-# Copyright (C) 2022 - present Juergen Zimmermann, Hochschule Karlsruhe
+# Copyright (C) 2023 - present Juergen Zimmermann, Hochschule Karlsruhe
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -13,21 +13,11 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-"""Konfiguration für ASGI."""
+"""CLI fuer das Projekt, damit `python -m carrier` funktioniert."""
 
-from typing import Final
+from carrier.asgi_server import run
 
-from carrier.config.config import app_config
+__all__ = ["run"]
 
-__all__ = ["host_binding", "port"]
-
-
-_server_toml: Final = app_config.get("server", {})
-
-host_binding: Final[str] = _server_toml.get("host-binding", "127.0.0.1")
-"""'Host Binding', z.B. 127.0.0.1 (default) oder 0.0.0.0."""
-
-port: Final[int] = _server_toml.get("port", 8000)
-"""Port für den Server (default: 8000)."""
-
-reload: Final[bool] = bool(_server_toml.get("reload", False))
+if __name__ == "__main__":
+    run()

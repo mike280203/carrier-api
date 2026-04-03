@@ -19,7 +19,7 @@ from typing import Final
 
 from strawberry.http.ides import GraphQL_IDE
 
-from patient.config.config import app_config
+from carrier.config.config import app_config
 
 __all__ = ["graphql_ide"]
 
