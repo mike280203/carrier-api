@@ -6,8 +6,8 @@ from typing import Any, Self
 from sqlalchemy import Enum, Identity, func
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from carrier.Entity.base import Base
-from carrier.Entity.carrier_type import CarrierType
+from carrier.entity.base import Base
+from carrier.entity.carrier_type import CarrierType
 
 
 class Carrier(Base):
