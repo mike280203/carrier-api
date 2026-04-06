@@ -26,9 +26,12 @@ CREATE TYPE carrier_type AS ENUM ('AIRCRAFT_CARRIER', 'HELICOPTER_CARRIER');
 
 CREATE TABLE IF NOT EXISTS carrier (
     id            INTEGER GENERATED ALWAYS AS IDENTITY(START WITH 1000) PRIMARY KEY,
+    version       INTEGER NOT NULL DEFAULT 0,
     name          TEXT NOT NULL UNIQUE,
     nation        TEXT NOT NULL,
-    carrier_type  carrier_type NOT NULL
+    carrier_type  carrier_type NOT NULL,
+    erzeugt       TIMESTAMP NOT NULL,
+    aktualisiert  TIMESTAMP NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS command_center (

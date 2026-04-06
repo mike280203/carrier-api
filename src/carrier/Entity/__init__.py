@@ -4,7 +4,7 @@ from carrier.entity.aircraft import Aircraft
 from carrier.entity.base import Base
 from carrier.entity.carrier import Carrier
 from carrier.entity.carrier_type import CarrierType
-from carrier.entity.command_center import CommandCenter
+from carrier.entity.commandcenter import CommandCenter
 
 __all__ = [
     "Aircraft",

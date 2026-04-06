@@ -3,9 +3,9 @@
 from loguru import logger
 from sqlalchemy import select
 
-from carrier.Entity import Aircraft, Base, Carrier, CarrierType, CommandCenter
 from carrier.config.dev_modus import dev_db_populate
-from carrier.repository import SessionLocal, engine
+from carrier.entity import Aircraft, Base, Carrier, CarrierType, CommandCenter
+from carrier.repository import Session, engine
 
 __all__ = ["DbPopulateService", "db_populate", "get_db_populate_service"]
 
@@ -19,7 +19,7 @@ class DbPopulateService:
         Base.metadata.drop_all(bind=engine)
         Base.metadata.create_all(bind=engine)
 
-        with SessionLocal() as session:
+        with Session() as session:
             exists = session.scalar(select(Carrier.id).limit(1))
             if exists is not None:
                 logger.debug("Beispieldaten bereits vorhanden")

@@ -16,4 +16,18 @@ class CarrierRepository:
     """Repository-Klasse mit CRUD-Methoden für die Entity-Klasse Carrier."""
 
     def find_by_id(self, carrier_id: int | None, session: Session) -> Carrier | None:
-        #todo
+        """Suche mit der Carrier-ID."""
+        logger.debug("carrier_id={}", carrier_id)  # NOSONAR
+
+        if carrier_id is None:
+            return None
+
+        statement: Final = (
+            select(Carrier).options(joinedload(Carrier.commandcenter))
+            .where(Carrier.id == carrier_id)
+        )
+
+        carrier: Final = session.scalar(statement)
+
+        logger.debug("{}", carrier)
+        return carrier
