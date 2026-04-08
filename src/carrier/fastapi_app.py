@@ -92,7 +92,7 @@ def get_carriers() -> list[CarrierResponse]:
         carriers = session.scalars(select(Carrier).order_by(Carrier.id)).all()
         return [
             CarrierResponse(
-                id=carrier.id,
+                id=carrier.id if carrier.id is not None else -1,
                 name=carrier.name,
                 nation=carrier.nation,
                 carrier_type=carrier.carrier_type.value,
