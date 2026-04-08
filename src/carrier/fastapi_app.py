@@ -11,7 +11,6 @@ from prometheus_fastapi_instrumentator import Instrumentator
 from pydantic import BaseModel
 from sqlalchemy import select
 
-from carrier.Entity import Carrier
 from carrier.banner import banner
 from carrier.config import dev_db_populate, dev_keycloak_populate
 from carrier.config.dev.db_populate import db_populate
@@ -20,7 +19,8 @@ from carrier.config.dev.keycloak_populate import keycloak_populate
 from carrier.config.dev.keycloak_populate_router import (
     router as keycloak_populate_router,
 )
-from carrier.repository import SessionLocal, engine
+from carrier.entity import Carrier
+from carrier.repository import Session, engine
 
 
 class CarrierResponse(BaseModel):
@@ -88,7 +88,7 @@ def health() -> dict[str, str]:
 @app.get("/rest/carriers", response_model=list[CarrierResponse])
 def get_carriers() -> list[CarrierResponse]:
     """Vorhandene Carrier aus der DB lesen."""
-    with SessionLocal() as session:
+    with Session() as session:
         carriers = session.scalars(select(Carrier).order_by(Carrier.id)).all()
         return [
             CarrierResponse(

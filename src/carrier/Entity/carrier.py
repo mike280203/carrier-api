@@ -16,6 +16,9 @@ class Carrier(Base):
     __tablename__ = "carrier"
 
     name: Mapped[str]
+    # name sollte eindeutig sein
+    # da carrier ja eindeutige namen haben im normalfall
+    # kann man hier noch anpassenauf DB ebene ist es schon unique
     """Der Name des Carriers."""
 
     nation: Mapped[str]
@@ -30,7 +33,7 @@ class Carrier(Base):
     )
     """Die generierte ID gemäß der zugehörigen IDENTITY-Spalte."""
 
-    command_center: Mapped[CommandCenter] = relationship(  # noqa: F821 # ty: ignore[unresolved-reference] # pyright: ignore[reportUndefinedVariable ]
+    commandcenter: Mapped[CommandCenter] = relationship(  # noqa: F821 # ty: ignore[unresolved-reference] # pyright: ignore[reportUndefinedVariable ]
         back_populates="carrier",
         uselist=False,
         innerjoin=True,
