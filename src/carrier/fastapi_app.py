@@ -33,7 +33,7 @@ class CarrierResponse(BaseModel):
 
 
 @asynccontextmanager
-async def lifespan(app: FastAPI):
+async def lifespan(app: FastAPI):  # noqa: RUF029
     """Optionale Dev-Initialisierung und sauberes Shutdown."""
     if dev_db_populate:
         db_populate()
