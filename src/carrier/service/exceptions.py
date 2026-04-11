@@ -56,5 +56,3 @@ class PreconditionFailedError(CarrierServiceError):
             f"aktuellen Version {expected_version}."
         )
         super().__init__(message)
-
-# versioning exceptions
