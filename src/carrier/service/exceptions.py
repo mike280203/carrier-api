@@ -6,6 +6,8 @@ __all__ = [
     "CarrierNameExistsError",
     "CarrierNotFoundError",
     "CarrierServiceError",
+    "PreconditionFailedError",
+    "PreconditionRequiredError",
 ]
 
 
@@ -30,6 +32,29 @@ class CarrierNameExistsError(CarrierServiceError):
         """Initialisierung mit dem bereits vorhandenen Namen."""
         self.name = name
         message: Final = f"Ein Carrier mit dem Namen '{name}' existiert bereits."
+        super().__init__(message)
+
+
+class PreconditionRequiredError(CarrierServiceError):
+    """Fehler, wenn für eine Änderung ein erforderlicher Header fehlt."""
+
+    def __init__(self) -> None:
+        """Initialisierung mit Standardmeldung für fehlendes If-Match."""
+        message: Final = "Der Header 'If-Match' ist erforderlich."
+        super().__init__(message)
+
+
+class PreconditionFailedError(CarrierServiceError):
+    """Fehler, wenn die Version im If-Match-Header nicht passt."""
+
+    def __init__(self, expected_version: int, actual_value: str | None) -> None:
+        """Initialisierung mit erwarteter Version und gelieferter Header-Angabe."""
+        self.expected_version = expected_version
+        self.actual_value = actual_value
+        message: Final = (
+            "Die Versionsangabe im Header 'If-Match' passt nicht zur "
+            f"aktuellen Version {expected_version}."
+        )
         super().__init__(message)
 
 # versioning exceptions
