@@ -83,3 +83,5 @@ class CarrierWriteService:
 
         self.repo.delete_by_id(carrier_id=carrier_id, session=session)
         session.commit()
+
+# versionierung muss noch implementiert werden

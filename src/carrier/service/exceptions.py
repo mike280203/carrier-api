@@ -31,3 +31,5 @@ class CarrierNameExistsError(CarrierServiceError):
         self.name = name
         message: Final = f"Ein Carrier mit dem Namen '{name}' existiert bereits."
         super().__init__(message)
+
+# versioning exceptions
