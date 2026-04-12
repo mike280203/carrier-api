@@ -9,7 +9,6 @@ from fastapi.middleware.gzip import GZipMiddleware
 from loguru import logger
 from prometheus_fastapi_instrumentator import Instrumentator
 from pydantic import BaseModel
-from sqlalchemy import select
 
 from carrier.banner import banner
 from carrier.config import dev_db_populate, dev_keycloak_populate
@@ -19,8 +18,9 @@ from carrier.config.dev.keycloak_populate import keycloak_populate
 from carrier.config.dev.keycloak_populate_router import (
     router as keycloak_populate_router,
 )
-from carrier.entity import Carrier
-from carrier.repository import Session, engine
+from carrier.repository import engine
+from carrier.router.carrier_router import router as carrier_router
+from carrier.router.carrier_write_router import router as carrier_write_router
 
 
 class CarrierResponse(BaseModel):
@@ -85,20 +85,8 @@ def health() -> dict[str, str]:
     return {"status": "ok"}
 
 
-@app.get("/rest/carriers", response_model=list[CarrierResponse])
-def get_carriers() -> list[CarrierResponse]:
-    """Vorhandene Carrier aus der DB lesen."""
-    with Session() as session:
-        carriers = session.scalars(select(Carrier).order_by(Carrier.id)).all()
-        return [
-            CarrierResponse(
-                id=carrier.id if carrier.id is not None else -1,
-                name=carrier.name,
-                nation=carrier.nation,
-                carrier_type=carrier.carrier_type.value,
-            )
-            for carrier in carriers
-        ]
+app.include_router(carrier_router)
+app.include_router(carrier_write_router)
 
 
 if dev_db_populate:
