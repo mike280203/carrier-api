@@ -18,6 +18,7 @@ from carrier.config.dev.keycloak_populate import keycloak_populate
 from carrier.config.dev.keycloak_populate_router import (
     router as keycloak_populate_router,
 )
+from carrier.graphql_api import graphql_router
 from carrier.repository import engine
 from carrier.router.carrier_router import router as carrier_router
 from carrier.router.carrier_write_router import router as carrier_write_router
@@ -87,6 +88,7 @@ def health() -> dict[str, str]:
 
 app.include_router(carrier_router)
 app.include_router(carrier_write_router)
+app.include_router(graphql_router, prefix="/graphql")
 
 
 if dev_db_populate:
