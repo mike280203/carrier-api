@@ -9,10 +9,15 @@ from carrier.problem_details import create_problem_details
 from carrier.repository import Session
 from carrier.router.carrier_model import CarrierModel
 from carrier.router.carrier_update_model import CarrierUpdateModel
-from carrier.router.constants import IF_MATCH, IF_MATCH_MIN_LEN
+from carrier.router.constants import ETAG, IF_MATCH, IF_MATCH_MIN_LEN
 from carrier.router.dependencies import get_write_service
 from carrier.service.carrier_write_service import CarrierWriteService
-from carrier.service.exceptions import CarrierNameExistsError, CarrierNotFoundError
+from carrier.service.exceptions import (
+    CarrierNameExistsError,
+    CarrierNotFoundError,
+    PreconditionFailedError,
+    PreconditionRequiredError,
+)
 
 __all__ = ["router"]
 
@@ -54,39 +59,31 @@ def put(
     service: Annotated[CarrierWriteService, Depends(get_write_service)],
 ) -> Response:
     """PUT-Request, um einen Carrier zu aktualisieren."""
-    if_match_value: Final = request.headers.get(IF_MATCH)
     logger.debug(
-        "carrier_id={}, if_match={}, carrier_update_model={}",
+        "carrier_id={}, carrier_update_model={}",
         carrier_id,
-        if_match_value,
         carrier_update_model,
     )
 
-    if if_match_value is None:
+    try:
+        expected_version: Final = _extract_if_match_version(request)
+    except PreconditionRequiredError as ex:
         return create_problem_details(
             status_code=status.HTTP_428_PRECONDITION_REQUIRED,
+            detail=str(ex),
         )
-
-    if (
-        len(if_match_value) < IF_MATCH_MIN_LEN
-        or not if_match_value.startswith('"')
-        or not if_match_value.endswith('"')
-    ):
+    except PreconditionFailedError as ex:
         return create_problem_details(
             status_code=status.HTTP_412_PRECONDITION_FAILED,
+            detail=str(ex),
         )
-
-    version: Final = if_match_value[1:-1]
-    try:
-        int(version)
-    except ValueError:
-        return Response(status_code=status.HTTP_412_PRECONDITION_FAILED)
 
     with Session() as session:
         try:
             carrier_modified: Final = service.update(
                 carrier_id=carrier_id,
                 carrier_update_model=carrier_update_model,
+                expected_version=expected_version,
                 session=session,
             )
         except CarrierNotFoundError as ex:
@@ -99,10 +96,15 @@ def put(
                 status_code=status.HTTP_409_CONFLICT,
                 detail=str(ex),
             )
+        except PreconditionFailedError as ex:
+            return create_problem_details(
+                status_code=status.HTTP_412_PRECONDITION_FAILED,
+                detail=str(ex),
+            )
 
     return Response(
         status_code=status.HTTP_204_NO_CONTENT,
-        headers={"ETag": f'"{carrier_modified.version}"'},
+        headers={ETAG: f'"{carrier_modified.version}"'},
     )
 
 
@@ -124,3 +126,30 @@ def delete_by_id(
             )
 
     return Response(status_code=status.HTTP_204_NO_CONTENT)
+
+
+def _extract_if_match_version(request: Request) -> int:
+    """Lese und validiere die Version aus dem If-Match-Header."""
+    if_match_value: Final = request.headers.get(IF_MATCH)
+
+    if if_match_value is None:
+        raise PreconditionRequiredError
+
+    if (
+        len(if_match_value) < IF_MATCH_MIN_LEN
+        or not if_match_value.startswith('"')
+        or not if_match_value.endswith('"')
+    ):
+        raise PreconditionFailedError(
+            expected_version=-1,
+            actual_value=if_match_value,
+        )
+
+    version: Final = if_match_value[1:-1]
+    try:
+        return int(version)
+    except ValueError as ex:
+        raise PreconditionFailedError(
+            expected_version=-1,
+            actual_value=if_match_value,
+        ) from ex

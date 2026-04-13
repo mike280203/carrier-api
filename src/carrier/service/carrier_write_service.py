@@ -39,6 +39,7 @@ class CarrierWriteService:
         carrier_dto: Final = CarrierDTO(carrier=created_carrier)
         logger.debug("carrier_dto={}", carrier_dto)
         return carrier_dto
+# mailer noch mit send_mail(carrier_dto) machen
 
     def update(
         self,
