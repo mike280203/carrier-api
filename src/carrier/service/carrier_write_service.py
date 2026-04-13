@@ -9,7 +9,11 @@ from carrier.repository.carrier_repository import CarrierRepository
 from carrier.router.carrier_model import CarrierModel
 from carrier.router.carrier_update_model import CarrierUpdateModel
 from carrier.service.carrier_dto import CarrierDTO
-from carrier.service.exceptions import CarrierNameExistsError, CarrierNotFoundError
+from carrier.service.exceptions import (
+    CarrierNameExistsError,
+    CarrierNotFoundError,
+    PreconditionFailedError,
+)
 
 __all__ = ["CarrierWriteService"]
 
@@ -40,6 +44,7 @@ class CarrierWriteService:
         self,
         carrier_id: int,
         carrier_update_model: CarrierUpdateModel,
+        expected_version: int,
         session: Session,
     ) -> CarrierDTO:
         """Aktualisiere einen vorhandenen Carrier."""
@@ -51,6 +56,12 @@ class CarrierWriteService:
         carrier_db = self.repo.find_by_id(carrier_id=carrier_id, session=session)
         if carrier_db is None:
             raise CarrierNotFoundError(carrier_id=carrier_id)
+
+        if expected_version != carrier_db.version:
+            raise PreconditionFailedError(
+                expected_version=carrier_db.version,
+                actual_value=str(expected_version),
+            )
 
         if (
             carrier_update_model.name != carrier_db.name
@@ -83,5 +94,3 @@ class CarrierWriteService:
 
         self.repo.delete_by_id(carrier_id=carrier_id, session=session)
         session.commit()
-
-# versionierung muss noch implementiert werden
