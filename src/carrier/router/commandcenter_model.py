@@ -29,8 +29,5 @@ class CommandCenterModel(BaseModel):
     def to_commandcenter(self) -> CommandCenter:
         """Konvertierung in ein CommandCenter-Objekt für SQLAlchemy."""
         commandcenter_dict = self.model_dump()
-        commandcenter_dict["id"] = None
-        commandcenter_dict["carrier_id"] = None
-        commandcenter_dict["carrier"] = None
 
         return CommandCenter(**commandcenter_dict)

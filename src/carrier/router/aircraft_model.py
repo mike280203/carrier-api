@@ -30,8 +30,5 @@ class AircraftModel(BaseModel):
     def to_aircraft(self) -> Aircraft:
         """Konvertierung in ein Aircraft-Objekt für SQLAlchemy."""
         aircraft_dict = self.model_dump()
-        aircraft_dict["id"] = None
-        aircraft_dict["carrier_id"] = None
-        aircraft_dict["carrier"] = None
 
         return Aircraft(**aircraft_dict)
