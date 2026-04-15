@@ -3,9 +3,9 @@
 from http import HTTPStatus
 from pathlib import Path
 from ssl import create_default_context
-from typing import Final
+from typing import Any, Final
 
-from httpx import post
+from httpx import get, post
 
 __all__ = [
     "base_url",
@@ -42,6 +42,18 @@ timeout: Final = 5
 
 certificate: Final = str(Path("tests") / "integration" / "certificate.crt")
 ctx = create_default_context(cafile=certificate)
+
+
+def check_readiness() -> None:
+    response: Final = get(f"{health_url}/readiness", verify=ctx)
+    if response.status_code != HTTPStatus.OK:
+        raise RuntimeError(f"readiness mit Statuscode {response.status_code}")
+    response_body: Final = response.json()
+    if not isinstance(response_body, dict):
+        raise RuntimeError("readiness ohne Dictionary im Response-Body")
+    status: Final[Any | None] = response_body.get("db")
+    if status != "up":
+        raise RuntimeError(f"readiness mit Meldungstext {status}")
 
 
 def login(
