@@ -7,6 +7,7 @@ import strawberry
 from fastapi import Request
 from loguru import logger
 from strawberry.fastapi import GraphQLRouter
+from strawberry.types import Info
 
 from carrier.config.graphql import graphql_ide
 from carrier.graphql_api.graphql_types import (
@@ -18,6 +19,7 @@ from carrier.repository import Session
 from carrier.repository.carrier_repository import CarrierRepository
 from carrier.repository.pageable import Pageable
 from carrier.router.carrier_model import CarrierModel
+from carrier.security import AuthorizationError, Role, TokenService
 from carrier.service.carrier_dto import CarrierDTO
 from carrier.service.carrier_service import CarrierService
 from carrier.service.carrier_write_service import CarrierWriteService
@@ -29,16 +31,37 @@ __all__ = ["Mutation", "Query", "graphql_router"]
 _repo: Final = CarrierRepository()
 _service: Final = CarrierService(_repo)
 _write_service: Final = CarrierWriteService(_repo)
+_token_service: Final = TokenService()
+
+
+def _get_user_from_info(info: Info):
+    """User aus dem GraphQL-Kontext lesen.
+
+    Falls kein gueltiger Bearer-Token vorhanden ist, wird None zurueckgegeben.
+    """
+    request: Final[Request] = info.context["request"]
+    try:
+        return _token_service.get_user_from_request(request)
+    except AuthorizationError:
+        return None
 
 
 @strawberry.type
 class Query:
-    """Query, um Carrierdaten zu lesen."""
+    """Queries, um Carrierdaten zu lesen."""
 
     @strawberry.field
-    def carrier(self, carrier_id: strawberry.ID) -> CarrierDTO | None:
-        """Daten zu einem Carrier lesen."""
+    def carrier(self, carrier_id: strawberry.ID, info: Info) -> CarrierDTO | None:
+        """Einen Carrier anhand seiner ID lesen.
+
+        Ohne gueltige Authentifizierung wird None zurueckgegeben.
+        Falls kein Carrier gefunden wird, wird ebenfalls None zurueckgegeben.
+        """
         logger.debug("carrier_id={}", carrier_id)
+
+        user = _get_user_from_info(info)
+        if user is None:
+            return None
 
         with Session() as session:
             try:
@@ -53,9 +76,21 @@ class Query:
         return carrier_dto
 
     @strawberry.field
-    def carriers(self, suchparameter: Suchparameter | None = None) -> Sequence[CarrierDTO]:  # noqa: E501
-        """Carrier anhand optionaler Suchparameter suchen."""
+    def carriers(
+        self,
+        info: Info,
+        suchparameter: Suchparameter | None = None,
+    ) -> Sequence[CarrierDTO]:
+        """Carrier anhand optionaler Suchparameter suchen.
+
+        Nur User mit der Rolle ADMIN duerfen mehrere Carrier suchen.
+        Ohne Berechtigung wird eine leere Liste geliefert.
+        """
         logger.debug("suchparameter={}", suchparameter)
+
+        user = _get_user_from_info(info)
+        if user is None or Role.ADMIN not in user.roles:
+            return []
 
         if suchparameter is None:
             suchparameter_filtered: dict[str, str] = {}
@@ -87,9 +122,18 @@ class Mutation:
     """Mutations, um Carrierdaten anzulegen."""
 
     @strawberry.mutation
-    def create(self, carrier_input: CarrierInput) -> CreatePayload:
-        """Einen neuen Carrier anlegen."""
+    def create(self, carrier_input: CarrierInput, info: Info) -> CreatePayload:
+        """Einen neuen Carrier anlegen.
+
+        Nur User mit der Rolle ADMIN duerfen neue Carrier anlegen.
+        """
         logger.debug("carrier_input={}", carrier_input)
+
+        user = _get_user_from_info(info)
+        if user is None:
+            raise Exception("Unauthorized")
+        if Role.ADMIN not in user.roles:
+            raise Exception("Forbidden")
 
         carrier_dict = carrier_input.__dict__.copy()
         carrier_dict["commandcenter"] = carrier_input.commandcenter.__dict__

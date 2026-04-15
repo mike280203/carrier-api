@@ -75,3 +75,16 @@ class CreatePayload:
 
     id: int
     """ID des neu angelegten Carriers."""
+
+
+@strawberry.type
+class LoginResult:
+    """Resultat-Typ, wenn ein Login erfolgreich war."""
+
+    token: str
+    """Token des eingeloggten Users."""
+
+    expiresIn: str  # noqa: N815  # NOSONAR
+    """Gültigkeitsdauer."""
+    roles: list[str]
+    """Rollen des Users."""

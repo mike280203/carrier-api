@@ -2,7 +2,7 @@
 
 from dataclasses import dataclass
 
-__all_ = ["LoginData"]
+__all__ = ["LoginData"]
 
 
 @dataclass
