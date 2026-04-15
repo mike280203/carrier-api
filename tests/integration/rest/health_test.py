@@ -5,10 +5,9 @@
 from http import HTTPStatus
 from typing import Any, Final
 
+from common_test import ctx, health_url, timeout
 from httpx import get
 from pytest import mark
-
-from tests.integration.common_test import ctx, health_url, timeout
 
 
 @mark.rest
