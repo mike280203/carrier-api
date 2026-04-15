@@ -26,6 +26,7 @@ class CarrierModel(CarrierUpdateModel):
         """Konvertierung in ein Carrier-Objekt für SQLAlchemy."""
         logger.debug("self={}", self)
         carrier_dict = self.to_dict()
+        carrier_dict.pop("id", None)
         carrier_dict["carrier_type"] = self.carrier_type
 
         carrier: Final = Carrier(**carrier_dict)
