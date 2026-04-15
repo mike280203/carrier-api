@@ -11,6 +11,8 @@ from carrier.router.carrier_model import CarrierModel
 from carrier.router.carrier_update_model import CarrierUpdateModel
 from carrier.router.constants import ETAG, IF_MATCH, IF_MATCH_MIN_LEN
 from carrier.router.dependencies import get_write_service
+from carrier.security.role import Role
+from carrier.security.roles_required import RolesRequired
 from carrier.service.carrier_write_service import CarrierWriteService
 from carrier.service.exceptions import (
     CarrierNameExistsError,
@@ -24,7 +26,7 @@ __all__ = ["router"]
 router: Final = APIRouter(prefix="/rest/carriers", tags=["Schreiben"])
 
 
-@router.post("")
+@router.post("", dependencies=[Depends(RolesRequired(Role.ADMIN))])
 def post(
     carrier_model: CarrierModel,
     request: Request,
@@ -51,7 +53,7 @@ def post(
     )
 
 
-@router.put("/{carrier_id}")
+@router.put("/{carrier_id}", dependencies=[Depends(RolesRequired(Role.ADMIN))])
 def put(
     carrier_id: int,
     carrier_update_model: CarrierUpdateModel,
@@ -108,7 +110,7 @@ def put(
     )
 
 
-@router.delete("/{carrier_id}")
+@router.delete("/{carrier_id}", dependencies=[Depends(RolesRequired(Role.ADMIN))])
 def delete_by_id(
     carrier_id: int,
     service: Annotated[CarrierWriteService, Depends(get_write_service)],
