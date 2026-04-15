@@ -162,7 +162,7 @@ def test_put_name_exists() -> None:
     )
     aktuelles_etag = get_response.headers.get("ETag", '"0"')
 
-    name_exists: Final = "USS Enterprise Updated"
+    name_exists: Final = "USS Gerald R. Ford"
 
     geaenderter_carrier: Final = {
         "name": name_exists,
