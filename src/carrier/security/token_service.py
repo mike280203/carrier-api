@@ -104,3 +104,25 @@ class TokenService:
         roles_enum: Final = [Role[role.upper()] for role in roles]
         logger.debug("roles_enum={}", roles_enum)
         return roles_enum
+
+    def token(self, username: str, password: str) -> dict[str, Any]:
+        """Einen Access Token von Keycloak anfordern.
+
+        :param username: Benutzername
+        :param password: Passwort
+        :return: Token-Daten von Keycloak
+        :rtype: dict[str, Any]
+        :raises RuntimeError: Falls Login bei Keycloak fehlschlägt
+        """
+        logger.debug("username={}", username)
+        try:
+            token_data: Final = self.keycloak.token(
+                username=username,
+                password=password,
+            )
+        except Exception as ex:
+            logger.exception("Login bei Keycloak fehlgeschlagen: username={}", username)
+            raise RuntimeError("Login bei Keycloak fehlgeschlagen") from ex
+
+        logger.debug("token_data keys={}", list(token_data.keys()))
+        return token_data

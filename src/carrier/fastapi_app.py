@@ -22,6 +22,7 @@ from carrier.graphql_api import graphql_router
 from carrier.repository import engine
 from carrier.router.carrier_router import router as carrier_router
 from carrier.router.carrier_write_router import router as carrier_write_router
+from carrier.security.auth_router import router as auth_router
 
 
 class CarrierResponse(BaseModel):
@@ -89,7 +90,7 @@ def health() -> dict[str, str]:
 app.include_router(carrier_router)
 app.include_router(carrier_write_router)
 app.include_router(graphql_router, prefix="/graphql")
-
+app.include_router(auth_router)
 
 if dev_db_populate:
     app.include_router(db_populate_router, prefix="/dev")
