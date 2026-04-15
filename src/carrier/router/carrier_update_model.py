@@ -13,11 +13,11 @@ __all__ = ["CarrierUpdateModel"]
 class CarrierUpdateModel(BaseModel):
     """Pydantic-Model zum Aktualisieren von Carrier."""
 
-    name: Annotated[str, StringConstraints(
-        pattern=r"^[A-Za-z0-9][A-Za-z0-9 .'-]{1,49}$")]
+    name: Annotated[
+        str, StringConstraints(pattern=r"^[A-Za-z0-9][A-Za-z0-9 .'-]{1,49}$")
+    ]
 
-    nation: Annotated[str, StringConstraints(
-        pattern=r"^[A-Za-z][A-Za-z .'-]{1,49}$")]
+    nation: Annotated[str, StringConstraints(pattern=r"^[A-Za-z][A-Za-z .'-]{1,49}$")]
 
     carrier_type: CarrierType | None = None
 
@@ -26,7 +26,7 @@ class CarrierUpdateModel(BaseModel):
             "example": {
                 "name": "Pentagon",
                 "nation": "United States",
-                "carrier_type": "AIRCRAFT_CARRIER"
+                "carrier_type": "AIRCRAFT_CARRIER",
             },
         }
     )

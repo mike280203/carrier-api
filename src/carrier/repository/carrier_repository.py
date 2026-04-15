@@ -26,7 +26,8 @@ class CarrierRepository:
             return None
 
         statement: Final = (
-            select(Carrier).options(joinedload(Carrier.commandcenter))
+            select(Carrier)
+            .options(joinedload(Carrier.commandcenter))
             .where(Carrier.id == carrier_id)
         )
 
@@ -49,7 +50,8 @@ class CarrierRepository:
             )
         else:
             statement: Final = select(Carrier).options(
-                joinedload(Carrier.commandcenter))
+                joinedload(Carrier.commandcenter)
+            )
 
         carriers: Final = session.scalars(statement).all()
         anzahl: Final = self._count_all_rows(session)
@@ -64,27 +66,35 @@ class CarrierRepository:
 
     def _find_by_name(self, name: str, session: Session) -> Carrier | None:
         logger.debug("name={}", name)
-        statement: Final = select(Carrier).options(
-            joinedload(Carrier.commandcenter)).where(Carrier.name == name)
+        statement: Final = (
+            select(Carrier)
+            .options(joinedload(Carrier.commandcenter))
+            .where(Carrier.name == name)
+        )
         carrier: Final = session.scalar(statement)
         logger.debug("{}", carrier)
         return carrier
 
     def _find_by_nation(
-        self, teil: str, pageable: Pageable,
-        session: Session) -> Slice[Carrier]:
+        self, teil: str, pageable: Pageable, session: Session
+    ) -> Slice[Carrier]:
         logger.debug("nation={}", teil)
         offset = pageable.number * pageable.size
 
         if pageable.size != 0:
-            statement: Final = select(Carrier).options(
-            joinedload(Carrier.commandcenter)).filter(
-                Carrier.nation.ilike(f"%{teil}%")).limit(
-                    pageable.size).offset(offset)
+            statement: Final = (
+                select(Carrier)
+                .options(joinedload(Carrier.commandcenter))
+                .filter(Carrier.nation.ilike(f"%{teil}%"))
+                .limit(pageable.size)
+                .offset(offset)
+            )
         else:
-            statement: Final = select(Carrier).options(
-            joinedload(Carrier.commandcenter)).filter(
-                Carrier.nation.ilike(f"%{teil}%"))
+            statement: Final = (
+                select(Carrier)
+                .options(joinedload(Carrier.commandcenter))
+                .filter(Carrier.nation.ilike(f"%{teil}%"))
+            )
 
         carriers: Final = session.scalars(statement).all()
         anzahl: Final = self._count_rows_nation(teil, session)
@@ -92,28 +102,35 @@ class CarrierRepository:
         logger.debug("{}", carrier_slice)
         return carrier_slice
 
-    def _count_rows_nation(
-        self, teil: str, session: Session) -> int:
-        statement: Final = select(func.count()).select_from(
-            Carrier).filter(Carrier.nation.ilike(f"%{teil}%"))
+    def _count_rows_nation(self, teil: str, session: Session) -> int:
+        statement: Final = (
+            select(func.count())
+            .select_from(Carrier)
+            .filter(Carrier.nation.ilike(f"%{teil}%"))
+        )
         count: Final = session.execute(statement).scalar()
         return count if count is not None else 0
 
     def _find_by_carrier_type(
-        self, carrier_type: CarrierType,
-         pageable: Pageable, session: Session) -> Slice[Carrier]:
+        self, carrier_type: CarrierType, pageable: Pageable, session: Session
+    ) -> Slice[Carrier]:
         logger.debug("carrier_type={}", carrier_type)
         offset = pageable.number * pageable.size
 
         if pageable.size != 0:
-            statement: Final = select(Carrier).options(
-            joinedload(Carrier.commandcenter)).filter(
-                Carrier.carrier_type == carrier_type).limit(
-                    pageable.size).offset(offset)
+            statement: Final = (
+                select(Carrier)
+                .options(joinedload(Carrier.commandcenter))
+                .filter(Carrier.carrier_type == carrier_type)
+                .limit(pageable.size)
+                .offset(offset)
+            )
         else:
-            statement: Final = select(Carrier).options(
-            joinedload(Carrier.commandcenter)).filter(
-                Carrier.carrier_type == carrier_type)
+            statement: Final = (
+                select(Carrier)
+                .options(joinedload(Carrier.commandcenter))
+                .filter(Carrier.carrier_type == carrier_type)
+            )
 
         carriers: Final = session.scalars(statement).all()
         anzahl: Final = self._count_rows_carrier_type(carrier_type, session)
@@ -122,10 +139,13 @@ class CarrierRepository:
         return carrier_slice
 
     def _count_rows_carrier_type(
-        self, carrier_type: CarrierType,
-        session: Session) -> int:
-        statement: Final = select(func.count()).select_from(
-            Carrier).filter(Carrier.carrier_type == carrier_type)
+        self, carrier_type: CarrierType, session: Session
+    ) -> int:
+        statement: Final = (
+            select(func.count())
+            .select_from(Carrier)
+            .filter(Carrier.carrier_type == carrier_type)
+        )
         count: Final = session.execute(statement).scalar()
         return count if count is not None else 0
 
@@ -195,8 +215,9 @@ class CarrierRepository:
         """Aktualisiere einen Carrier."""
         logger.debug("{}", carrier)
 
-        if (carrier_db := self.find_by_id(
-            carrier_id=carrier.id, session=session)) is None:
+        if (
+            carrier_db := self.find_by_id(carrier_id=carrier.id, session=session)
+        ) is None:
             return None
         carrier_db.set(carrier)
 

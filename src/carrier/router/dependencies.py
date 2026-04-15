@@ -22,7 +22,7 @@ def get_service(
 
 
 def get_write_service(
-    repo: Annotated[CarrierRepository, Depends(get_repository)]
+    repo: Annotated[CarrierRepository, Depends(get_repository)],
 ) -> CarrierWriteService:
     """Factory-Funktion für CarrierWriteService."""
     return CarrierWriteService(repo=repo)

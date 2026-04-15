@@ -40,7 +40,6 @@ class TokenService:
             raise AuthorizationError
 
         try:
-
             authorization_scheme, bearer_token = authorization_header.split()
         except ValueError as err:
             raise AuthorizationError from err

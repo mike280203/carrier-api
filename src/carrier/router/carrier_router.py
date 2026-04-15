@@ -25,8 +25,9 @@ __all__ = ["router"]
 router: Final = APIRouter(prefix="/rest/carriers", tags=["Lesen"])
 
 
-@router.get("/{carrier_id}", dependencies=[Depends(RolesRequired(
-    [Role.ADMIN, Role.USER]))])
+@router.get(
+    "/{carrier_id}", dependencies=[Depends(RolesRequired([Role.ADMIN, Role.USER]))]
+)
 def get_carrier_by_id(
     carrier_id: int,
     request: Request,

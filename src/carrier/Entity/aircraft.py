@@ -27,7 +27,7 @@ class Aircraft(Base):
     carrier_id: Mapped[int] = mapped_column(ForeignKey("carrier.id"), init=False)
     """ID des zugehörigen Carriers als Fremdschlüssel in der DB-Tabelle."""
 
-    carrier: Mapped[Carrier] = relationship(   # noqa: F821 # ty: ignore[unresolved-reference] # pyright: ignore[reportUndefinedVariable ]
+    carrier: Mapped[Carrier] = relationship(  # noqa: F821 # ty: ignore[unresolved-reference] # pyright: ignore[reportUndefinedVariable ]
         back_populates="aircrafts",
         init=False,
     )

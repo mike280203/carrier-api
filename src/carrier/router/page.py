@@ -56,9 +56,13 @@ class Page:
         content: tuple[dict[str, Any], ...], pageable: Pageable, total_elements: int
     ) -> Page:
         """Eine Seite mit einem Datenausschnitt und Metadaten erstellen."""
-        total_pages: Final = (0 if total_elements == 0
-        else 1 if pageable.size == 0
-        else ceil(total_elements / pageable.size))
+        total_pages: Final = (
+            0
+            if total_elements == 0
+            else 1
+            if pageable.size == 0
+            else ceil(total_elements / pageable.size)
+        )
         page_meta = PageMeta(
             size=pageable.size,
             number=pageable.number,

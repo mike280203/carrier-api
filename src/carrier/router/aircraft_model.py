@@ -12,11 +12,13 @@ __all__ = ["AircraftModel"]
 class AircraftModel(BaseModel):
     """Repräsentiert ein Aircraft-Modell für die API."""
 
-    model: Annotated[str, StringConstraints(
-        pattern=r"^[A-Za-z0-9][A-Za-z0-9 .-]{0,49}$")]
+    model: Annotated[
+        str, StringConstraints(pattern=r"^[A-Za-z0-9][A-Za-z0-9 .-]{0,49}$")
+    ]
 
-    manufacturer: Annotated[str, StringConstraints(
-        pattern=r"^[A-Za-z][A-Za-z0-9 .-]{1,49}$")]
+    manufacturer: Annotated[
+        str, StringConstraints(pattern=r"^[A-Za-z][A-Za-z0-9 .-]{1,49}$")
+    ]
 
     model_config = ConfigDict(
         json_schema_extra={

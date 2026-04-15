@@ -23,7 +23,7 @@ def test_put() -> None:
     get_response = get(
         f"{rest_url}/{carrier_id}",
         headers={"Authorization": f"Bearer {token}"},
-        verify=ctx
+        verify=ctx,
     )
 
     aktuelles_etag = get_response.headers.get("ETag", '"0"')

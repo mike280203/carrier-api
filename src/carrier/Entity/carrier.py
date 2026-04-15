@@ -25,7 +25,7 @@ class Carrier(Base):
     """Die Nation des Carriers."""
 
     carrier_type: Mapped[CarrierType] = mapped_column(
-    Enum(CarrierType, name="carrier_type")
+        Enum(CarrierType, name="carrier_type")
     )
     """Der Typ des Carriers."""
 

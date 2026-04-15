@@ -39,7 +39,8 @@ class CarrierWriteService:
         carrier_dto: Final = CarrierDTO(carrier=created_carrier)
         logger.debug("carrier_dto={}", carrier_dto)
         return carrier_dto
-# mailer noch mit send_mail(carrier_dto) machen
+
+    # mailer noch mit send_mail(carrier_dto) machen
 
     def update(
         self,
@@ -64,9 +65,8 @@ class CarrierWriteService:
                 actual_value=str(expected_version),
             )
 
-        if (
-            carrier_update_model.name != carrier_db.name
-            and self.repo.exists_name(name=carrier_update_model.name, session=session)
+        if carrier_update_model.name != carrier_db.name and self.repo.exists_name(
+            name=carrier_update_model.name, session=session
         ):
             raise CarrierNameExistsError(name=carrier_update_model.name)
 

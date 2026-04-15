@@ -12,8 +12,9 @@ __all__ = ["CommandCenterModel"]
 class CommandCenterModel(BaseModel):
     """Repräsentiert ein CommandCenter-Modell für die API."""
 
-    code_name: Annotated[str, StringConstraints(
-        pattern=r"^[A-Za-z0-9][A-Za-z0-9 .-]{1,49}$")]
+    code_name: Annotated[
+        str, StringConstraints(pattern=r"^[A-Za-z0-9][A-Za-z0-9 .-]{1,49}$")
+    ]
 
     security_level: Annotated[int, Field(ge=1, le=99)]
 
