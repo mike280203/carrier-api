@@ -283,7 +283,7 @@ testpaths = ["tests/integration", "tests/unit"]
 # -r A: zusaetzliche Zusammenfassung anzeigen (A = All)
 # --html erfordert pytest-html
 # --cov erfordert pytest-cov
-addopts = "--html=report.html --cov --cov-report=html"
+addopts = "--html=report.html"
 markers = [
     "rest: REST-Schnittstelle",
     "get_request: GET-Requests",
