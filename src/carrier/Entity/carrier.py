@@ -24,12 +24,15 @@ class Carrier(Base):
     nation: Mapped[str]
     """Die Nation des Carriers."""
 
-    carrier_type: Mapped[CarrierType] = mapped_column(Enum(CarrierType))
+    carrier_type: Mapped[CarrierType] = mapped_column(
+    Enum(CarrierType, name="carrier_type")
+    )
     """Der Typ des Carriers."""
 
     id: Mapped[int | None] = mapped_column(
         Identity(start=1000),
         primary_key=True,
+        init=False,
     )
     """Die generierte ID gemäß der zugehörigen IDENTITY-Spalte."""
 

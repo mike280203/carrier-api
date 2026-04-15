@@ -4,7 +4,7 @@ from loguru import logger
 from sqlalchemy import select
 
 from carrier.config.dev_modus import dev_db_populate
-from carrier.entity import Aircraft, Base, Carrier, CarrierType, CommandCenter
+from carrier.entity import Aircraft, Carrier, CarrierType, CommandCenter
 from carrier.repository import Session, engine
 
 __all__ = ["DbPopulateService", "db_populate", "get_db_populate_service"]
@@ -16,8 +16,6 @@ class DbPopulateService:
     def populate(self) -> None:
         """Tabellen neu anlegen und Beispieldaten einspielen."""
         logger.warning(">>> Die Carrier-DB wird neu aufgebaut: {} <<<", engine.url)
-        Base.metadata.drop_all(bind=engine)
-        Base.metadata.create_all(bind=engine)
 
         with Session() as session:
             exists = session.scalar(select(Carrier.id).limit(1))
@@ -30,7 +28,7 @@ class DbPopulateService:
                     name="USS Gerald R. Ford",
                     nation="USA",
                     carrier_type=CarrierType.AIRCRAFT_CARRIER,
-                    command_center=CommandCenter(
+                    commandcenter=CommandCenter(
                         code_name="Atlas",
                         security_level=5,
                     ),
@@ -49,7 +47,7 @@ class DbPopulateService:
                     name="JS Izumo",
                     nation="Japan",
                     carrier_type=CarrierType.HELICOPTER_CARRIER,
-                    command_center=CommandCenter(
+                    commandcenter=CommandCenter(
                         code_name="Shogun",
                         security_level=4,
                     ),
