@@ -220,6 +220,9 @@ dev = [
     # https://locust.io
     "locust>=2.43.3",
     # https://pytest.org
+    "mkdocs>=1.6.1",
+    "mkdocs-material>=9.7.6",
+    "mkdocstrings[python]>=1.0.3",
     "pytest>=9.0.2",
     # https://pytest-cov.readthedocs.io
     "pytest-cov>=7.0.0",
