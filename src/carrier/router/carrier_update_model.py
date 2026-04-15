@@ -42,7 +42,10 @@ class CarrierUpdateModel(BaseModel):
 
     def to_carrier(self) -> Carrier:
         """Konvertierung in ein Carrier-Objekt für SQLAlchemy."""
-        carrier_dict = self.to_dict()
+        carrier_dict = self.model_dump()
+
+        carrier_dict["commandcenter"] = None
+        carrier_dict["aircrafts"] = []
 
         carrier = Carrier(**carrier_dict)
         return carrier  # noqa: RET504
