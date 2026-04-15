@@ -6,6 +6,7 @@ from fastapi import Depends, HTTPException, Request, status
 from loguru import logger
 
 from carrier.security.dependencies import get_token_service
+from carrier.security.exceptions import AuthorizationError
 from carrier.security.role import Role
 from carrier.security.token_service import TokenService
 
@@ -28,7 +29,10 @@ class RolesRequired:
         service: Annotated[TokenService, Depends(get_token_service)],
     ) -> None:
         """Überprüfung der Rollen des aktuellen Users."""
-        user: Final[User] = service.get_user_from_request(request)
+        try:
+            user: Final[User] = service.get_user_from_request(request)
+        except AuthorizationError as ex:
+            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED) from ex
         logger.debug("user={}", user)
         if isinstance(self.required_roles, Role):
             if self.required_roles not in user.roles:
