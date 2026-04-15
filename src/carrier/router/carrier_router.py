@@ -14,6 +14,8 @@ from carrier.repository.slice import Slice
 from carrier.router.constants import ETAG, IF_NONE_MATCH, IF_NONE_MATCH_MIN_LEN
 from carrier.router.dependencies import get_service
 from carrier.router.page import Page
+from carrier.security.role import Role
+from carrier.security.roles_required import RolesRequired
 from carrier.service.carrier_dto import CarrierDTO
 from carrier.service.carrier_service import CarrierService
 from carrier.service.exceptions import CarrierNotFoundError
@@ -23,7 +25,8 @@ __all__ = ["router"]
 router: Final = APIRouter(prefix="/rest/carriers", tags=["Lesen"])
 
 
-@router.get("/{carrier_id}")
+@router.get("/{carrier_id}", dependencies=[Depends(RolesRequired(
+    [Role.ADMIN, Role.USER]))])
 def get_carrier_by_id(
     carrier_id: int,
     request: Request,
@@ -62,7 +65,7 @@ def get_carrier_by_id(
     )
 
 
-@router.get("")
+@router.get("", dependencies=[Depends(RolesRequired([Role.ADMIN, Role.USER]))])
 def get_carriers(
     request: Request,
     service: Annotated[CarrierService, Depends(get_service)],
