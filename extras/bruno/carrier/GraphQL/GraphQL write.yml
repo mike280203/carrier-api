@@ -1,0 +1,26 @@
+info:
+  name: GraphQL write
+  type: http
+  seq: 13
+
+http:
+  method: POST
+  url: "{{baseUrl}}/graphql"
+  headers:
+    - name: Content-Type
+      value: application/json
+    - name: Authorization
+      value: Bearer {{adminToken}}
+  body:
+    type: json
+    data: |-
+      {
+        "query": "mutation { create(carrierInput: { name: \"GraphQL Carrier\", nation: \"USA\", carrierType: AIRCRAFT_CARRIER, commandcenter: { codeName: \"GraphQL Command\", securityLevel: 5 }, aircrafts: [{ model: \"F-35C\", manufacturer: \"Lockheed Martin\" }] }) { id } }"
+      }
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

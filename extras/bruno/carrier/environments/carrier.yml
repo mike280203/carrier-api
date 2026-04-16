@@ -1,0 +1,8 @@
+name: carrier
+variables:
+  - name: baseUrl
+    value: https://localhost:8000
+  - name: accessToken
+    value: '""'
+  - name: adminToken
+    value: '""'

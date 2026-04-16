@@ -1,0 +1,29 @@
+info:
+  name: PUT carrier noadmin
+  type: http
+  seq: 2
+
+http:
+  method: PUT
+  url: "{{baseUrl}}/rest/carriers/100"
+  headers:
+    - name: Content-Type
+      value: application/json
+    - name: If-Match
+      value: '"1"'
+    - name: Authorization
+      value: Bearer {{adminToken}}
+  body:
+    type: json
+    data: |
+      {
+        "name": "USS Enterprise Updated",
+        "nation": "United States",
+        "carrier_type": "AIRCRAFT_CARRIER"
+      }
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

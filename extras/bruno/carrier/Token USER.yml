@@ -1,0 +1,39 @@
+info:
+  name: Token USER
+  type: http
+  seq: 1
+
+http:
+  method: POST
+  url: https://localhost:8843/realms/python/protocol/openid-connect/token
+  headers:
+    - name: Content-Type
+      value: application/x-www-form-urlencoded
+  body:
+    type: form-urlencoded
+    data:
+      - name: grant_type
+        value: password
+      - name: client_id
+        value: python-client
+      - name: client_secret
+        value: lqOvrgoW1KvUIwicyP3XAyrPQAnRs7Ga
+      - name: username
+        value: carrier
+      - name: password
+        value: p
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: after-response
+      code: |-
+        const body = res.getBody();
+
+        bru.setEnvVar("accessToken", body.access_token);
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

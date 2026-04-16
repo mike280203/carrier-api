@@ -1,0 +1,27 @@
+info:
+  name: GraphQL read user
+  type: http
+  seq: 8
+
+http:
+  method: POST
+  url: "{{baseUrl}}/graphql"
+  headers:
+    - name: Content-Type
+      value: application/json
+    - name: Authorization
+      value: Bearer {{accessToken}}
+  body:
+    type: json
+    data: |+
+      {
+        "query": "query { carrier(carrierId: \"1002\") { id version name nation carrierType commandcenter { codeName securityLevel } } }"
+      }
+
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

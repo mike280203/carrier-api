@@ -1,0 +1,37 @@
+info:
+  name: POST carrier noadmin
+  type: http
+  seq: 10
+
+http:
+  method: POST
+  url: "{{baseUrl}}/rest/carriers"
+  headers:
+    - name: Content-Type
+      value: application/json
+    - name: Authorization
+      value: Bearer {{accessToken}}
+  body:
+    type: json
+    data: |+
+      {
+        "name": "USS Enterprise",
+        "nation": "United States",
+        "carrier_type": "AIRCRAFT_CARRIER",
+        "commandcenter": {
+          "code_name": "Enterprise Command",
+          "security_level": 5
+        },
+        "aircrafts": [
+          {
+            "model": "F-35C",
+            "manufacturer": "Lockheed Martin"
+          }
+        ]
+      }
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
