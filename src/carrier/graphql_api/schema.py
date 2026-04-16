@@ -83,13 +83,13 @@ class Query:
     ) -> Sequence[CarrierDTO]:
         """Carrier anhand optionaler Suchparameter suchen.
 
-        Nur User mit der Rolle ADMIN duerfen mehrere Carrier suchen.
+        Alle authentifizierten User duerfen Carrier suchen.
         Ohne Berechtigung wird eine leere Liste geliefert.
         """
         logger.debug("suchparameter={}", suchparameter)
 
         user = _get_user_from_info(info)
-        if user is None or Role.ADMIN not in user.roles:
+        if user is None:
             return []
 
         if suchparameter is None:
