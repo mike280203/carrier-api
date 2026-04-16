@@ -1,0 +1,26 @@
+# Copyright (C) 2026 - present, Carrier Team
+
+[server]
+host-binding = "0.0.0.0"
+
+[db]
+password = "p"
+password-admin = "p"
+log-statements = true
+
+[mail]
+port = 1025
+
+[excel]
+enabled = true
+
+[keycloak]
+client-secret = "lqOvrgoW1KvUIwicyP3XAyrPQAnRs7Ga"
+admin-password = "p"
+
+[graphql]
+graphiql-enabled = true
+
+[dev]
+db-populate = true
+keycloak-populate = false
