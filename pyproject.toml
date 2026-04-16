@@ -191,7 +191,7 @@ dependencies = [
 carrier = "carrier:main"
 
 [build-system]
-requires = ["uv_build==0.11.2"]
+requires = ["uv_build==0.11.7"]
 build-backend = "uv_build"
 
 [project.urls]
@@ -368,7 +368,7 @@ case-sensitive = true
 # https://docs.astral.sh/ty/reference/configuration/#python
 python = "./.venv"
 # https://docs.astral.sh/ty/modules
-root = ["./src", "./tests/integration", "./tests/unit"]
+root = ["./src", "./tests/integration"]
 
 # VORSICHT: in Dockerfile "--no-default-groups" bei "uv sync"
 [tool.uv]
